@@ -1,0 +1,45 @@
+name: tcpip2
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^0.66.0
+  firebase_core: ^2.20.0
+  firebase_database: ^10.2.4
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.2
+  permission_handler: ^11.3.0
+  path_provider: ^2.1.2
+  share_plus: ^7.2.2
+  csv: ^5.1.1
+  # iOS-style icons (default)
+  cupertino_icons: ^1.0.8
+
+  # ✅ Added for handling JSON and HTTP (optional for now)
+  http: ^0.13.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+
+  flutter_lints: ^5.0.0
+
+  # ✅ Optional, only needed if you plan to auto-generate model classes from JSON
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/logo.png

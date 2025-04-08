@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1009160932943",
+    "firebase_url": "https://mdp1-5f933-default-rtdb.firebaseio.com",
+    "project_id": "mdp1-5f933",
+    "storage_bucket": "mdp1-5f933.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009160932943:android:d00f501ea8907f1d71a43a",
+        "android_client_info": {
+          "package_name": "com.example.tcpip2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAObOX-JWSoUY09vV-KT8rHT5oAXSH4SUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
