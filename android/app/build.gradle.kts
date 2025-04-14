@@ -15,6 +15,8 @@ android {
     namespace = "com.example.tcpip2"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
+    compileSdk = 35
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -34,6 +36,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        minSdk = 21
+        targetSdk = 35
+
     }
 
     buildTypes {

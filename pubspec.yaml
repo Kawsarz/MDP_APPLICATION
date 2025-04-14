@@ -16,10 +16,16 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   shared_preferences: ^2.2.2
-  permission_handler: ^11.3.0
   path_provider: ^2.1.2
   share_plus: ^7.2.2
   csv: ^5.1.1
+  intl: ^0.18.1
+  percent_indicator: ^4.2.2
+  geolocator: ^10.1.0
+  permission_handler: ^11.4.0
+
+
+
   # iOS-style icons (default)
   cupertino_icons: ^1.0.8
 
@@ -33,6 +39,9 @@ dev_dependencies:
 
 
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.5
+
 
   # ✅ Optional, only needed if you plan to auto-generate model classes from JSON
   build_runner: ^2.4.6
@@ -43,3 +52,20 @@ flutter:
 
   assets:
     - assets/logo.png
+    - assets/backgroun.png
+    - assets/logotap.png
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logotap.png"
+
+flutter_native_splash:
+color: "#ffffff"
+image: assets/icon.png
+fullscreen: true
+
+android: true
+ios: true
+
+android_gravity: center
+ios_content_mode: scaleAspectFit                     # fills entire screen
