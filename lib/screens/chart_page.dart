@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:hive/hive.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WaveClipperTop extends CustomClipper<Path> {
   @override
@@ -43,8 +45,19 @@ class _ChartPageState extends State<ChartPage> {
   void initState() {
     super.initState();
     powerBox = Hive.box('powerData');
-    _loadInitial();
+    _checkLoggingAndLoad();
     _subscribeToHive();
+  }
+
+  Future<void> _checkLoggingAndLoad() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggingEnabled = prefs.getBool('firebaseLogging') ?? true;
+
+    if (!isLoggingEnabled) {
+      _loadInitial();
+    } else {
+      await _loadFirebaseOnce();
+    }
   }
 
   void _loadInitial() {
@@ -52,6 +65,18 @@ class _ChartPageState extends State<ChartPage> {
     for (int i = start; i < powerBox.length; i++) {
       final entry = powerBox.getAt(i);
       if (entry is Map) _data.add(Map<String, dynamic>.from(entry));
+    }
+    setState(() {});
+  }
+
+  Future<void> _loadFirebaseOnce() async {
+    final snapshot = await FirebaseDatabase.instance.ref("logs").limitToLast(20).get();
+    if (snapshot.exists) {
+      final Map<dynamic, dynamic> values = snapshot.value as Map;
+      final entries = values.entries.map((entry) => Map<String, dynamic>.from(entry.value)).toList();
+      _data.clear();
+      _data.addAll(entries);
+      setState(() {});
     }
   }
 
@@ -87,7 +112,6 @@ class _ChartPageState extends State<ChartPage> {
     return Scaffold(
       body: Column(
         children: [
-          // Top wave with background image and title
           ClipPath(
             clipper: WaveClipperTop(),
             child: Container(
@@ -104,20 +128,12 @@ class _ChartPageState extends State<ChartPage> {
                 children: const [
                   Text(
                     'Charts',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   SizedBox(height: 6),
                   Text(
                     'Real-time sensor monitoring',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black45,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black45),
                   ),
                   SizedBox(height: 10),
                   Icon(Icons.show_chart, size: 40, color: Colors.orange),
@@ -125,10 +141,7 @@ class _ChartPageState extends State<ChartPage> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Orange bar with icons
           Container(
             decoration: BoxDecoration(
               color: Colors.amber[600],
@@ -168,10 +181,7 @@ class _ChartPageState extends State<ChartPage> {
               }).toList(),
             ),
           ),
-
           const SizedBox(height: 24),
-
-          // Chart Area
           Center(
             child: Container(
               height: 420,
@@ -181,14 +191,11 @@ class _ChartPageState extends State<ChartPage> {
                 color: isDark ? Colors.grey[900] : Colors.amber[50],
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                  ),
+                  BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
                 ],
               ),
               child: spots.isEmpty
-                  ? const Center(child: Text("🚫 No data available"))
+                  ? const Center(child: Text("\u{1F6AB} No data available"))
                   : LineChart(
                 LineChartData(
                   minX: 0,
@@ -200,10 +207,7 @@ class _ChartPageState extends State<ChartPage> {
                       isCurved: true,
                       barWidth: 2.5,
                       color: Colors.orangeAccent,
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: Colors.orangeAccent.withOpacity(0.2),
-                      ),
+                      belowBarData: BarAreaData(show: true, color: Colors.orangeAccent.withOpacity(0.2)),
                       dotData: FlDotData(show: false),
                     )
                   ],
@@ -228,9 +232,7 @@ class _ChartPageState extends State<ChartPage> {
                   ),
                   borderData: FlBorderData(
                     show: true,
-                    border: Border.all(
-                      color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    ),
+                    border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                   ),
                   gridData: FlGridData(show: true),
                 ),

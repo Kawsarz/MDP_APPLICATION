@@ -7,6 +7,7 @@ import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExportPage extends StatefulWidget {
   const ExportPage({super.key});
@@ -20,6 +21,7 @@ class _ExportPageState extends State<ExportPage> with SingleTickerProviderStateM
   late Animation<Offset> _slide;
   late Animation<double> _fade;
   String lastExported = "-";
+  bool isFirebaseEnabled = true;
 
   @override
   void initState() {
@@ -29,12 +31,14 @@ class _ExportPageState extends State<ExportPage> with SingleTickerProviderStateM
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _controller.forward();
+    _loadFirebasePref();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _loadFirebasePref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFirebaseEnabled = prefs.getBool('firebaseLogging') ?? true;
+    });
   }
 
   Future<bool> _requestStoragePermission() async {
@@ -64,7 +68,7 @@ class _ExportPageState extends State<ExportPage> with SingleTickerProviderStateM
           ]);
         }
       }
-    } else {
+    } else if (isFirebaseEnabled) {
       final snapshot = await FirebaseDatabase.instance.ref('logs').get();
       final data = snapshot.value;
       if (data is Map) {

@@ -34,10 +34,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _clearHiveData() async {
-    await Hive.box('powerData').clear();
+    final box = await Hive.openBox('powerData');
+    await box.clear();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("All local data cleared."),
+        content: Text("All local Hive data cleared."),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -101,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF1E293B),
+        color: Color(0xFF1E293B), // Fixed color
       ),
     ),
   );
